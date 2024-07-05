@@ -1,0 +1,10 @@
+# 路径
+path: /home/ai/gsh/Code/yolov5-6.2/yolov5-6.2/datasets/firebox
+train: /home/ai/gsh/Code/yolov5-6.2/yolov5-6.2/datasets/firebox/images/train
+val: /home/ai/gsh/Code/yolov5-6.2/yolov5-6.2/datasets/firebox/images/val
+
+# 类型数目
+nc: 2
+
+# 类型具体名称
+names: ['fire_extinguisher','box']
