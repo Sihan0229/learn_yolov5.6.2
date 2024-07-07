@@ -30,11 +30,15 @@ import yaml
 from torch.optim import lr_scheduler
 from tqdm import tqdm
 
-FILE = Path(__file__).resolve()
-ROOT = FILE.parents[0]  # YOLOv5 root directory
-if str(ROOT) not in sys.path:
-    sys.path.append(str(ROOT))  # add ROOT to PATH
+FILE = Path(__file__).resolve() # 获取当前脚本的绝对路径
+ROOT = FILE.parents[0]  # YOLOv5 root directory 
+if str(ROOT) not in sys.path: #使得项目中的模块可以被正确导入，即使脚本是从其他目录运行的
+    sys.path.append(str(ROOT))  # add ROOT to PATH 
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
+
+
+
+
 
 import val  # for end-of-epoch mAP
 from models.experimental import attempt_load
@@ -479,12 +483,12 @@ def parse_opt(known=False):
 
 def main(opt, callbacks=Callbacks()):
     # Checks
-    if RANK in {-1, 0}:
+    if RANK in {-1, 0}: # RANK可以在分布式训练或多进程环境中用于唯一标识每个进程或计算节点
         print_args(vars(opt))
         check_git_status()
         check_requirements()
 
-    # Resume
+    # Resume 处理训练的恢复
     if opt.resume and not (check_wandb_resume(opt) or opt.evolve):  # resume from specified or most recent last.pt
         last = Path(check_file(opt.resume) if isinstance(opt.resume, str) else get_latest_run())
         opt_yaml = last.parent.parent / 'opt.yaml'  # train options yaml
@@ -498,6 +502,7 @@ def main(opt, callbacks=Callbacks()):
         opt.cfg, opt.weights, opt.resume = '', str(last), True  # reinstate
         if is_url(opt_data):
             opt.data = check_file(opt_data)  # avoid HUB resume auth timeout
+    # 初始化新训练
     else:
         opt.data, opt.cfg, opt.hyp, opt.weights, opt.project = \
             check_file(opt.data), check_yaml(opt.cfg), check_yaml(opt.hyp), str(opt.weights), str(opt.project)  # checks
@@ -510,7 +515,7 @@ def main(opt, callbacks=Callbacks()):
             opt.name = Path(opt.cfg).stem  # use model.yaml as name
         opt.save_dir = str(increment_path(Path(opt.project) / opt.name, exist_ok=opt.exist_ok))
 
-    # DDP mode
+    # DDP mode 分布式数据并行（DDP）模式设置
     device = select_device(opt.device, batch_size=opt.batch_size)
     if LOCAL_RANK != -1:
         msg = 'is not compatible with YOLOv5 Multi-GPU DDP training'
@@ -524,10 +529,10 @@ def main(opt, callbacks=Callbacks()):
         dist.init_process_group(backend="nccl" if dist.is_nccl_available() else "gloo")
 
     # Train
-    if not opt.evolve:
-        train(opt.hyp, opt, device, callbacks)
+    if not opt.evolve:  
+        train(opt.hyp, opt, device, callbacks)  
 
-    # Evolve hyperparameters (optional)
+    # Evolve hyperparameters (optional)超参数进化
     else:
         # Hyperparameter evolution metadata (mutation scale 0-1, lower_limit, upper_limit)
         meta = {
