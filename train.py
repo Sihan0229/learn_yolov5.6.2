@@ -626,7 +626,9 @@ def run(**kwargs):
     main(opt)
     return opt
 
-
+# 只有当当前模块被直接运行时，才会执行其下的代码块。
+# __name__是一个特殊的内置变量，当Python解释器运行一个模块时，它会根据模块的用途为__name__赋值。
+# 如果模块是被直接运行的，__name__的值就是"__main__"；如果模块是被导入的，__name__的值就是模块的名称。
 if __name__ == "__main__":
     opt = parse_opt()
-    main(opt)
+    main(opt)  
