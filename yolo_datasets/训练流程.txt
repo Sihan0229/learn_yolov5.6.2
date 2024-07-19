@@ -1,0 +1,7 @@
+
+1. 运行split_train_val.py，划分数据集，生成train.txt、trainval.txt、val.txt、test.txt，存放在VOCData/imageSets/Main路径下；
+2. 运行voc_label.py，生成train.txt、val.txt、test.txt，存放在VOCData路径下；把数据集格式转换成yolo_txt格式，存放在VOCData/labels路径下；
+
+
+
+
